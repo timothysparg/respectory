@@ -2,9 +2,9 @@ import * as fs from "fs-extra";
 import * as os from "os";
 import * as path from "path";
 import * as tmp from "tmp-promise";
-// TODO Tim Fix
+// TODO #6
 // import { registerShutdownHook } from "../../internal/util/shutdown";
-// TODO Tim Fix
+// TODO #5
 // import { logger } from "../../util/logger";
 import {
     CloneDirectoryInfo,
@@ -80,7 +80,7 @@ class CleaningTmpDirectoryManager implements DirectoryManager {
         try {
             await fs.remove(p);
         } catch (e) {
-            // TODO Tim Fix
+            // TODO #5
             // logger.warn(`Failed to remove '${p}': ${e.message}`);
         }
     }
@@ -103,13 +103,13 @@ class CleaningTmpDirectoryManager implements DirectoryManager {
             const errs: Error[] = [];
             for (const dir of toRemove) {
                 const dirPath = path.join(this.root, dir);
-                // TODO Tim Fix
+                // TODO #5
                 // logger.debug(`Deleting temporary directory: ${dirPath}`);
                 try {
                     await fs.remove(dirPath);
                 } catch (e) {
                     e.message = `Failed to remove temporary directory '${dirPath}': ${e.message}`;
-                    // TODO Tim Fix
+                    // TODO #5
                     // logger.warn(e.message);
                     errs.push(e);
                 }
@@ -120,7 +120,7 @@ class CleaningTmpDirectoryManager implements DirectoryManager {
                 throw err;
             }
         } catch (e) {
-            // TODO Tim Fix
+            // TODO #5
             // logger.warn(`Failed to remove temporary directories: ${e.message}`);
             return 1;
         }
@@ -151,7 +151,7 @@ class CleaningTmpDirectoryManager implements DirectoryManager {
                 const dirStat = fs.statSync(dirPath);
                 return dirStat.mtimeMs < ts;
             } catch (e) {
-                // TODO Tim Fix
+                // TODO #5
                 // logger.warn(`Failed to stat temporary directory '${dirPath}', returning false: ${e.message}`);
                 return false;
             }

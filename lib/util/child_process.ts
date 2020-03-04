@@ -24,7 +24,7 @@ import * as spawn from "cross-spawn";
 import * as process from "process";
 import stripAnsi from "strip-ansi";
 import * as treeKill from "tree-kill";
-// TODO Tim
+// TODO #34
 // import {
 //     LeveledLogMethod,
 //     logger,
@@ -54,7 +54,7 @@ export function childProcessString(cmd: string, args: string[] = [], opts: Spawn
  */
 export function killProcess(pid: number, signal?: string | number): void {
     const sig = (signal) ? `signal ${signal}` : "default signal";
-    // TODO Tim
+    // TODO #34
     // logger.debug(`Calling tree-kill on child process ${pid} with ${sig}`);
     treeKill(pid, signal);
 }
@@ -160,7 +160,7 @@ export async function spawnPromise(cmd: string, args: string[] = [], opts: Spawn
             optsToUse.log.write(formatted);
         }
 
-        // TODO Tim
+        // TODO #8
         // function commandLog(data: string, l: LeveledLogMethod = logger.debug): void {
         //     if (optsToUse.log && optsToUse.logCommand) {
         //         const terminated = (data.endsWith("\n")) ? data : data + "\n";
@@ -170,16 +170,16 @@ export async function spawnPromise(cmd: string, args: string[] = [], opts: Spawn
         //     }
         // }
 
-        // TODO Tim
+        // TODO #34
         // logger.debug(`Spawning: ${cmdString}`);
         const childProcess = spawn(cmd, args, optsToUse);
-        // TODO Tim
+        // TODO #8
         // commandLog(`Spawned: ${cmdString} (PID ${childProcess.pid})`);
 
         let timer: NodeJS.Timer;
         if (optsToUse.timeout) {
             timer = setTimeout(() => {
-                // TODO Tim
+                // TODO #8
                 // commandLog(`Child process timeout expired, killing command: ${cmdString}`, logger.warn);
                 killProcess(childProcess.pid, optsToUse.killSignal);
             }, optsToUse.timeout);
@@ -199,13 +199,13 @@ export async function spawnPromise(cmd: string, args: string[] = [], opts: Spawn
         }
         childProcess.on("exit", (code, signal) => {
             timer = clearTimer(timer);
-            // TODO Tim
+            // TODO #34
             // logger.debug(`Child process exit with code ${code} and signal ${signal}: ${cmdString}`);
         });
         /* tslint:disable:no-null-keyword */
         childProcess.on("close", (code, signal) => {
             timer = clearTimer(timer);
-            // TODO Tim
+            // TODO #8
             // commandLog(`Child process close with code ${code} and signal ${signal}: ${cmdString}`);
             resolve({
                 cmdString,
@@ -221,7 +221,7 @@ export async function spawnPromise(cmd: string, args: string[] = [], opts: Spawn
         childProcess.on("error", err => {
             timer = clearTimer(timer);
             err.message = `Failed to run command: ${cmdString}: ${err.message}`;
-            // TODO Tim
+            // TODO #8
             // commandLog(err.message, logger.error);
             resolve({
                 cmdString,
@@ -311,14 +311,14 @@ export async function execPromise(cmd: string, args: string[] = [], opts: SpawnS
     }
     if (result.status) {
         const msg = `Child process ${result.pid} exited with non-zero status ${result.status}: ${result.cmdString}\n${result.stderr}`;
-        // TODO Tim
+        // TODO #34
         // logger.error(msg);
         result.error = new Error(msg);
         throw ExecPromiseError.fromSpawnReturns(result);
     }
     if (result.signal) {
         const msg = `Child process ${result.pid} received signal ${result.signal}: ${result.cmdString}\n${result.stderr}`;
-        // TODO Tim
+        // TODO #34
         // logger.error(msg);
         result.error = new Error(msg);
         throw ExecPromiseError.fromSpawnReturns(result);
