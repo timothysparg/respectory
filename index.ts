@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
+export * from "./lib/tree/ast/astUtils";
 export {
     isTokenCredentials,
     ProjectOperationCredentials,
@@ -36,6 +36,10 @@ export {
     GitCommandGitProject,
     isValidSHA1,
 } from "./lib/project/git/GitCommandGitProject";
+export {
+    GitHubRepoRef,
+    isGitHubRepoRef,
+} from "./lib/operations/common/GitHubRepoRef";
 export {
     GitProject,
     GitPushOptions,
