@@ -1,7 +1,7 @@
 import promiseRetry = require("promise-retry");
 import { WrapOptions } from "retry";
 
-// TODO #24 
+// TODO #24
 // import { logger } from "./logger";
 
 /**
@@ -36,14 +36,14 @@ export function doWithRetry<R>(what: () => Promise<R>,
         ...opts,
     };
     if (opts.log) {
-        // TODO #24 
+        // TODO #24
         // logger.log("silly", `${description} with retry options '%j'`, retryOptions);
     }
     return promiseRetry(retryOptions, retry => {
         return what()
             .catch(err => {
                 if (opts.log) {
-                    // TODO #24 
+                    // TODO #24
                     // logger.warn(`Error occurred attempting '${description}': ${err.message}`);
                 }
                 retry(err);

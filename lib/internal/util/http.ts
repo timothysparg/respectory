@@ -1,3 +1,4 @@
+// tslint:disable-next-line:import-blacklist
 import { AxiosRequestConfig } from "axios";
 import * as url from "url";
 

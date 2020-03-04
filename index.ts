@@ -68,5 +68,3 @@ export {
 export {
     CloneOptions,
 } from "./lib/spi/clone/DirectoryManager";
-
-

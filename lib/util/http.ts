@@ -13,7 +13,7 @@ import {
  * configuration is provided and no running client instance can be found.
  */
 export function httpClient(url: string): HttpClient {
-// TODO #20 
+// TODO #20
 // export function httpClient(url: string,
 //                            configuration?: Configuration): HttpClient {
     // let cfg = configuration;
