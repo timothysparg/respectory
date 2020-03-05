@@ -12,8 +12,7 @@ import {
     HttpResponse,
 } from "../spi/http/httpClient";
 import { httpClient } from "./http";
-// TODO #33
-// import { logger } from "./logger";
+import { logger } from "./logger";
 
 /**
  * Return a deep link to the file location
@@ -64,8 +63,7 @@ export function fileContent(token: string, user: string, repo: string, path: str
 
 function filePromise(token: string, user: string, repo: string, path: string): Promise<HttpResponse<{ content: string }>> {
     const url = `${GitHubDotComBase}/repos/${user}/${repo}/contents/${path}`;
-    // TODO #33
-    // logger.debug(`Request to '${url}' to check for file existence]`);
+    logger.debug(`Request to '${url}' to check for file existence]`);
     // We only care if it returns 200. Otherwise it isn't there
     return httpClient(url).exchange<{ content: string }>(url, {
         method: HttpMethod.Get, ...authHeaders(token),
@@ -86,8 +84,7 @@ export interface Issue {
 export function raiseIssue(token: string, rr: RepoRef, issue: Issue): Promise<HttpResponse<any>> {
     const grr = isGitHubRepoRef(rr) ? rr : new GitHubRepoRef(rr.owner, rr.repo, rr.sha);
     const url = `${grr.scheme}${grr.apiBase}/repos/${rr.owner}/${rr.repo}/issues`;
-    // TODO #33
-    // logger.debug(`Request to '${url}' to raise issue`);
+    logger.debug(`Request to '${url}' to raise issue`);
     return httpClient(url).exchange(url, { method: HttpMethod.Post, body: issue, ...authHeaders(token) });
 }
 
@@ -108,8 +105,7 @@ export interface Comment {
 
 export function createCommitComment(token: string, rr: GitHubRepoRef, comment: Comment): Promise<HttpResponse<any>> {
     const url = `${rr.scheme}${rr.apiBase}/repos/${rr.owner}/${rr.repo}/commits/${rr.sha}/comments`;
-    // TODO #33
-    // logger.debug(`Request to '${url}' to create comment`);
+    logger.debug(`Request to '${url}' to create comment`);
     return httpClient(url).exchange(url, { method: HttpMethod.Post, body: comment, ...authHeaders(token) });
 }
 
@@ -139,8 +135,7 @@ export async function createRepo(token: string,
         private: priv,
     };
 
-    // TODO #33
-    // logger.debug(`Request to '${repoUrl}' to create repo`);
+    logger.debug(`Request to '${repoUrl}' to create repo`);
     return client.exchange(repoUrl, {
         method: HttpMethod.Post,
         body: payload, ...authHeaders(token),
