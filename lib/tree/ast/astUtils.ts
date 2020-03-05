@@ -10,8 +10,7 @@ import {
     TreeNode,
 } from "@atomist/tree-path";
 import * as _ from "lodash";
-// TODO #36
-// import { logger } from "../../util/logger";
+import { logger } from "../../util/logger";
 
 import { Predicate } from "@atomist/tree-path/lib/path/pathExpression";
 import {
@@ -315,9 +314,8 @@ async function parseFile(parser: FileParser,
             return prod;
         }, cacheAst);
 
-        // TODO #36
-        // logger.debug("Successfully parsed file '%s' to AST with root node named '%s'. Will execute '%s'",
-            // file.path, topLevelProduction.$name, stringify(pex));
+        logger.debug("Successfully parsed file '%s' to AST with root node named '%s'. Will execute '%s'",
+            file.path, topLevelProduction.$name, stringify(pex));
         const fileNode = {
             path: file.path,
             name: file.name,
@@ -326,8 +324,7 @@ async function parseFile(parser: FileParser,
         };
         const r = evaluateExpression(fileNode, pex, functionRegistry);
         if (isSuccessResult(r)) {
-            // TODO #36
-            // logger.debug("%d matches in file '%s'", r.length, file.path);
+            logger.debug("%d matches in file '%s'", r.length, file.path);
             return fillInSourceLocations(file, r)
                 .then(locatedNodes => {
                     if (matchTester) {
@@ -338,13 +335,11 @@ async function parseFile(parser: FileParser,
                     return new FileHit(p, file, fileNode, locatedNodes);
                 });
         } else {
-            // TODO #36
-            // logger.debug("No matches in file '%s'", file.path);
+            logger.debug("No matches in file '%s'", file.path);
             return undefined;
         }
     } catch (err) {
-        // TODO #36
-        // logger.debug("Failed to parse file '%s': %s", file.path, err);
+        logger.debug("Failed to parse file '%s': %s", file.path, err);
         return undefined;
     }
 }
