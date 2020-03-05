@@ -11,8 +11,7 @@ import {
 import * as _ from "lodash";
 import * as ts from "typescript";
 import { File } from "../../../project/File";
-// TODO #35
-// import { logger } from "../../../util/logger";
+import { logger } from "../../../util/logger";
 import { FileParser } from "../FileParser";
 
 /**
@@ -106,8 +105,7 @@ class TypeScriptAstNodeTreeNode implements TreeNode {
             if (!!node.pos) {
                 this.$offset = node.pos;
             } else {
-                // TODO #35
-                // logger.debug("Cannot get start for node with kind %s", ts.SyntaxKind[node.kind]);
+                logger.debug("Cannot get start for node with kind %s", ts.SyntaxKind[node.kind]);
             }
         }
 
