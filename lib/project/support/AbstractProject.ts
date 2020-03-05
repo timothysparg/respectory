@@ -2,8 +2,7 @@ import { Options } from "fast-glob";
 import * as micromatch from "micromatch";
 import { AbstractScriptedFlushable } from "../../internal/common/AbstractScriptedFlushable";
 import { RepoRef } from "../../operations/common/RepoId";
-// TODO #10
-// import { logger } from "../../util/logger";
+import { logger } from "../../util/logger";
 import {
     File,
     FileNonBlocking,
@@ -94,8 +93,7 @@ export abstract class AbstractProject extends AbstractScriptedFlushable<Project>
     }
 
     public trackFile(f: FileNonBlocking): this {
-        // TODO #10
-        // logger.debug(`Project is tracking '${f.path}'`);
+        logger.debug(`Project is tracking '${f.path}'`);
         return this.recordAction(p => {
             return f.flush().then(_ => p);
         });
