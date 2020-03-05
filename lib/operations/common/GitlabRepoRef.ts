@@ -6,6 +6,7 @@ import {
 } from "../../action/ActionResult";
 import { Configurable } from "../../project/git/Configurable";
 import { HttpMethod } from "../../spi/http/httpClient";
+import { httpClient } from "../../util/http";
 import { logger } from "../../util/logger";
 import { AbstractRemoteRepoRef } from "./AbstractRemoteRepoRef";
 import { GitlabPrivateTokenCredentials } from "./GitlabPrivateTokenCredentials";
@@ -69,9 +70,8 @@ export class GitlabRepoRef extends AbstractRemoteRepoRef {
 
     public async createRemote(creds: ProjectOperationCredentials, description: string, visibility): Promise<ActionResult<this>> {
         const gitlabUrl = GitlabRepoRef.concatUrl(this.apiBase, `projects`);
-        const httpClient = automationClientInstance().configuration.http.client.factory.create(gitlabUrl);
         const namespace = await this.getNamespaceForOwner(this.owner, creds);
-        return httpClient.exchange(gitlabUrl, {
+        return httpClient(gitlabUrl).exchange(gitlabUrl, {
             method: HttpMethod.Post,
             body: {
                 name: `${this.repo}`,
@@ -98,9 +98,8 @@ export class GitlabRepoRef extends AbstractRemoteRepoRef {
 
     public deleteRemote(creds: ProjectOperationCredentials): Promise<ActionResult<this>> {
         const gitlabUrl = GitlabRepoRef.concatUrl(this.apiBase, `project/${this.owner}%2f${this.repo}`);
-        const httpClient = automationClientInstance().configuration.http.client.factory.create(gitlabUrl);
         logger.debug(`Making request to '${url}' to delete repo`);
-        return httpClient.exchange(gitlabUrl, {
+        return httpClient(gitlabUrl).exchange(gitlabUrl, {
             method: HttpMethod.Delete,
             headers: {
                 "Private-Token": (creds as GitlabPrivateTokenCredentials).privateToken,
@@ -125,9 +124,8 @@ export class GitlabRepoRef extends AbstractRemoteRepoRef {
     public raisePullRequest(credentials: ProjectOperationCredentials,
                             title: string, body: string, head: string, base: string): Promise<ActionResult<this>> {
         const gitlabUrl = GitlabRepoRef.concatUrl(this.apiBase, `projects/${this.owner}%2f${this.repo}/merge_requests`);
-        const httpClient = automationClientInstance().configuration.http.client.factory.create(gitlabUrl);
         logger.debug(`Making request to '${url}' to raise PR`);
-        return httpClient.exchange(gitlabUrl, {
+        return httpClient(gitlabUrl).exchange(gitlabUrl, {
             method: HttpMethod.Post,
             body: {
                 id: `${this.owner}%2f${this.repo}`,
@@ -155,8 +153,7 @@ export class GitlabRepoRef extends AbstractRemoteRepoRef {
 
     private getNamespaceForOwner(owner: string, creds: ProjectOperationCredentials): Promise<number> {
         const gitlabUrl = GitlabRepoRef.concatUrl(this.apiBase, `namespaces?search=${encodeURI(owner)}`);
-        const httpClient = automationClientInstance().configuration.http.client.factory.create(gitlabUrl);
-        return httpClient.exchange(gitlabUrl, {
+        return httpClient(gitlabUrl).exchange(gitlabUrl, {
             method: HttpMethod.Get,
             headers: {
                 "Private-Token": (creds as GitlabPrivateTokenCredentials).privateToken,
