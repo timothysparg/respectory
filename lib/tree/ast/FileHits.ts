@@ -11,8 +11,7 @@ import {
     Project,
     ProjectAsync,
 } from "../../project/Project";
-// TODO #37
-// import { logger } from "../../util/logger";
+import { logger } from "../../util/logger";
 import { LocatedTreeNode } from "../LocatedTreeNode";
 
 /**
@@ -93,8 +92,7 @@ export class FileHit {
                         if (u.offset === undefined) {
                             throw new Error(`Cannot update as offset is not set: ${JSON.stringify(u)}`);
                         }
-                        // TODO #37
-                        // logger.debug("Applying update %j", u);
+                        logger.debug("Applying update %j", u);
                         if (!!u.replaceAfter) {
                             newContent = newContent.substr(0, u.offset) +
                                 newContent.substr(u.offset).replace(u.initialValue, u.currentValue);
@@ -131,8 +129,7 @@ function makeUpdatable(matches: MatchResult[], updates: Update[]): void {
                     return currentValue;
                 },
                 set(v2: string): void {
-                    // TODO #37
-                    // logger.debug("Updating value from '%s' to '%s' on '%s'", currentValue, v2, m.$name);
+                    logger.debug("Updating value from '%s' to '%s' on '%s'", currentValue, v2, m.$name);
                     // TODO allow only one
                     currentValue = v2;
                     requireOffset(m);
