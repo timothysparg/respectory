@@ -7,8 +7,7 @@ import {
     RepoRef,
     SimpleRepoId,
 } from "../../operations/common/RepoId";
-// TODO #9
-// import { logger } from "../../util/logger";
+import { logger } from "../../util/logger";
 import { File } from "../File";
 import { isInMemoryProject } from "../mem/InMemoryProject";
 import {
@@ -130,8 +129,7 @@ export class NodeFsLocalProject extends AbstractProject implements LocalProject 
             await fs.remove(this.toRealPath(path));
             this.invalidateCache();
         } catch (e) {
-            // TODO #9
-            // logger.debug("Unable to delete directory '%s': %s", path, e.message);
+            logger.debug("Unable to delete directory '%s': %s", path, e.message);
         }
         return this;
     }
@@ -142,8 +140,7 @@ export class NodeFsLocalProject extends AbstractProject implements LocalProject 
             fs.removeSync(localPath);
             this.invalidateCache();
         } catch (e) {
-            // TODO #9
-            // logger.debug("Unable to delete directory '%s': %s", path, e.message);
+            logger.debug("Unable to delete directory '%s': %s", path, e.message);
         }
     }
 
@@ -152,8 +149,7 @@ export class NodeFsLocalProject extends AbstractProject implements LocalProject 
             fs.unlinkSync(this.toRealPath(path));
             this.invalidateCache();
         } catch (e) {
-            // TODO #9
-            // logger.debug("Unable to delete file '%s': %s", path, e.message);
+            logger.debug("Unable to delete file '%s': %s", path, e.message);
         }
     }
 
@@ -162,8 +158,7 @@ export class NodeFsLocalProject extends AbstractProject implements LocalProject 
             await fs.unlink(this.toRealPath(path));
             this.invalidateCache();
         } catch (e) {
-            // TODO #9
-            // logger.debug("Unable to delete file '%s': %s", path, e.message);
+            logger.debug("Unable to delete file '%s': %s", path, e.message);
         }
         return this;
     }
