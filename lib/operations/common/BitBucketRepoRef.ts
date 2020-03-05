@@ -2,8 +2,6 @@ import {
     ActionResult,
     successOn,
 } from "../../action/ActionResult";
-import { configurationValue } from "../../configuration";
-
 import { encode } from "../../internal/util/base64";
 import { Configurable } from "../../project/git/Configurable";
 import {
@@ -11,6 +9,7 @@ import {
     HttpClientFactory,
     HttpMethod,
 } from "../../spi/http/httpClient";
+import { httpClient } from "../../util/http";
 import { logger } from "../../util/logger";
 import { AbstractRemoteRepoRef } from "./AbstractRemoteRepoRef";
 import { isBasicAuthCredentials } from "./BasicAuthCredentials";
@@ -37,7 +36,7 @@ export class BitBucketRepoRef extends AbstractRemoteRepoRef {
         const url = `${this.scheme}${this.apiBase}/repositories/${this.owner}/${this.repo}`;
 
         logger.debug("Making request to BitBucket '%s' to create repo", url);
-        return configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create(url).exchange(url, {
+        return httpClient(url).exchange(url, {
             method: HttpMethod.Post,
             headers: {
                 "Content-Type": "application/json",
@@ -70,7 +69,7 @@ export class BitBucketRepoRef extends AbstractRemoteRepoRef {
         const url = `${this.scheme}${this.apiBase}/repositories/${this.owner}/${this.repo}`;
         logger.debug(`Making request to '${url}' to delete repo`);
 
-        return configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create(url).exchange(url, {
+        return httpClient(url).exchange(url, {
             method: HttpMethod.Delete,
             headers: {
                 ...headers(creds),
@@ -105,7 +104,7 @@ export class BitBucketRepoRef extends AbstractRemoteRepoRef {
         const url = `${this.scheme}${this.apiBase}/repositories/${this.owner}/${this.repo}/pullrequests`;
         logger.debug(`Making request to '${url}' to raise PR`);
 
-        return configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create(url).exchange(url, {
+        return httpClient(url).exchange(url, {
             method: HttpMethod.Post,
             headers: {
                 "Content-Type": "application/json",
