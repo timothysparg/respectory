@@ -34,8 +34,7 @@ import {
     execPromise,
     ExecPromiseResult,
 } from "../../util/child_process";
-// TODO #12
-// import { logger } from "../../util/logger";
+import { logger } from "../../util/logger";
 import {
     isLocalProject,
     ReleaseFunction,
@@ -121,8 +120,7 @@ export class GitCommandGitProject extends NodeFsLocalProject implements GitProje
                         shouldCache: boolean = false) {
         super(id, baseDir, release, shouldCache);
         this.branch = (id.branch || id.sha) || "master";
-        // TODO #12
-        // logger.debug(`Created GitProject`);
+        logger.debug(`Created GitProject`);
     }
 
     public async init(): Promise<this> {
@@ -164,8 +162,7 @@ export class GitCommandGitProject extends NodeFsLocalProject implements GitProje
         return gid.createRemote(this.credentials, description, visibility)
             .then(res => {
                 if (res.success) {
-                    // TODO #12
-                    // logger.debug(`Repo created ok`);
+                    logger.debug(`Repo created ok`);
                     return this.setRemote(gid.cloneUrl(this.credentials));
                 } else {
                     return Promise.reject(res.error);
@@ -259,8 +256,7 @@ export class GitCommandGitProject extends NodeFsLocalProject implements GitProje
             .then(() => this)
             .catch(err => {
                 err.message = `Unable to push 'git "${gitPushArgs.join('" "')}"': ${err.message}`;
-                // TODO #12
-                // logger.error(err.message);
+                logger.error(err.message);
                 return Promise.reject(err);
             });
     }
@@ -306,8 +302,7 @@ async function clone(
 ): Promise<GitProject> {
 
     const cloneDirectoryInfo = await directoryManager.directoryFor(id.owner, id.repo, id.branch, opts);
-    // TODO #12
-    // logger.debug("Directory info: %j", cloneDirectoryInfo);
+    logger.debug("Directory info: %j", cloneDirectoryInfo);
     switch (cloneDirectoryInfo.type) {
         case "empty-directory":
             return cloneInto(credentials, cloneDirectoryInfo, opts, id);
@@ -340,9 +335,8 @@ async function cloneInto(
     opts: CloneOptions,
     id: RemoteRepoRef,
 ): Promise<GitCommandGitProject> {
-    // TODO #12
-    // logger.debug(
-        // `Cloning repo with owner '${id.owner}', name '${id.repo}', branch '${id.branch}', sha '${id.sha}' and options '${JSON.stringify(opts)}'`);
+    logger.debug(
+        `Cloning repo with owner '${id.owner}', name '${id.repo}', branch '${id.branch}', sha '${id.sha}' and options '${JSON.stringify(opts)}'`);
     const sha = id.sha || "HEAD";
     const repoDir = targetDirectoryInfo.path;
     const url = id.cloneUrl(credentials);
@@ -368,8 +362,7 @@ async function cloneInto(
 
     // TODO CD user:password should be replaced too
     const cleanUrl = url.replace(/\/\/.*:x-oauth-basic/, "//TOKEN:x-oauth-basic");
-    // TODO #12
-    // logger.debug(`Cloning repo '${cleanUrl}' in '${repoDir}'`);
+    logger.debug(`Cloning repo '${cleanUrl}' in '${repoDir}'`);
     const retryOptions = {
         retries: 4,
         factor: 2,
@@ -380,8 +373,7 @@ async function cloneInto(
     await promiseRetry(retryOptions, (retry, count) => {
         return execPromise("git", cloneArgs)
             .catch(err => {
-                // TODO #12
-                // logger.debug(`Clone of ${id.owner}/${id.repo} attempt ${count} failed: ` + err.message);
+                logger.debug(`Clone of ${id.owner}/${id.repo} attempt ${count} failed: ` + err.message);
                 retry(err);
             });
     });
@@ -389,13 +381,11 @@ async function cloneInto(
         await execPromise("git", ["checkout", checkoutRef, "--"], { cwd: repoDir });
     } catch (err) {
         // When the head moved on and we only cloned with depth; we might have to do a full clone to get to the commit we want
-        // TODO #12
-        // logger.debug(`Ref ${checkoutRef} not in cloned history. Attempting full clone`);
+        logger.debug(`Ref ${checkoutRef} not in cloned history. Attempting full clone`);
         await execPromise("git", ["fetch", "--unshallow"], { cwd: repoDir })
             .then(() => execPromise("git", ["checkout", checkoutRef, "--"], { cwd: repoDir }));
     }
-    // TODO #12
-    // logger.debug(`Clone succeeded with URL '${cleanUrl}'`);
+    logger.debug(`Clone succeeded with URL '${cleanUrl}'`);
     return GitCommandGitProject.fromBaseDir(id, repoDir, credentials,
         targetDirectoryInfo.release,
         targetDirectoryInfo.provenance + "\nfreshly cloned");
