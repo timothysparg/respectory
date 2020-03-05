@@ -24,11 +24,10 @@ import * as spawn from "cross-spawn";
 import * as process from "process";
 import stripAnsi from "strip-ansi";
 import * as treeKill from "tree-kill";
-// TODO #34
-// import {
-//     LeveledLogMethod,
-//     logger,
-// } from "./logger";
+import {
+    LeveledLogMethod,
+    logger,
+} from "./logger";
 
 export { spawn };
 
@@ -54,8 +53,7 @@ export function childProcessString(cmd: string, args: string[] = [], opts: Spawn
  */
 export function killProcess(pid: number, signal?: string | number): void {
     const sig = (signal) ? `signal ${signal}` : "default signal";
-    // TODO #34
-    // logger.debug(`Calling tree-kill on child process ${pid} with ${sig}`);
+    logger.debug(`Calling tree-kill on child process ${pid} with ${sig}`);
     treeKill(pid, signal);
 }
 
@@ -160,27 +158,23 @@ export async function spawnPromise(cmd: string, args: string[] = [], opts: Spawn
             optsToUse.log.write(formatted);
         }
 
-        // TODO #8
-        // function commandLog(data: string, l: LeveledLogMethod = logger.debug): void {
-        //     if (optsToUse.log && optsToUse.logCommand) {
-        //         const terminated = (data.endsWith("\n")) ? data : data + "\n";
-        //         pLog(terminated);
-        //     } else {
-        //         l(data);
-        //     }
-        // }
+        function commandLog(data: string, l: LeveledLogMethod = logger.debug): void {
+            if (optsToUse.log && optsToUse.logCommand) {
+                const terminated = (data.endsWith("\n")) ? data : data + "\n";
+                pLog(terminated);
+            } else {
+                l(data);
+            }
+        }
 
-        // TODO #34
-        // logger.debug(`Spawning: ${cmdString}`);
+        logger.debug(`Spawning: ${cmdString}`);
         const childProcess = spawn(cmd, args, optsToUse);
-        // TODO #8
-        // commandLog(`Spawned: ${cmdString} (PID ${childProcess.pid})`);
+        commandLog(`Spawned: ${cmdString} (PID ${childProcess.pid})`);
 
         let timer: NodeJS.Timer;
         if (optsToUse.timeout) {
             timer = setTimeout(() => {
-                // TODO #8
-                // commandLog(`Child process timeout expired, killing command: ${cmdString}`, logger.warn);
+                commandLog(`Child process timeout expired, killing command: ${cmdString}`, logger.warn);
                 killProcess(childProcess.pid, optsToUse.killSignal);
             }, optsToUse.timeout);
         }
@@ -199,14 +193,12 @@ export async function spawnPromise(cmd: string, args: string[] = [], opts: Spawn
         }
         childProcess.on("exit", (code, signal) => {
             timer = clearTimer(timer);
-            // TODO #34
-            // logger.debug(`Child process exit with code ${code} and signal ${signal}: ${cmdString}`);
+            logger.debug(`Child process exit with code ${code} and signal ${signal}: ${cmdString}`);
         });
         /* tslint:disable:no-null-keyword */
         childProcess.on("close", (code, signal) => {
             timer = clearTimer(timer);
-            // TODO #8
-            // commandLog(`Child process close with code ${code} and signal ${signal}: ${cmdString}`);
+            commandLog(`Child process close with code ${code} and signal ${signal}: ${cmdString}`);
             resolve({
                 cmdString,
                 pid: childProcess.pid,
@@ -221,8 +213,7 @@ export async function spawnPromise(cmd: string, args: string[] = [], opts: Spawn
         childProcess.on("error", err => {
             timer = clearTimer(timer);
             err.message = `Failed to run command: ${cmdString}: ${err.message}`;
-            // TODO #8
-            // commandLog(err.message, logger.error);
+            commandLog(err.message, logger.error);
             resolve({
                 cmdString,
                 pid: childProcess.pid,
@@ -311,15 +302,13 @@ export async function execPromise(cmd: string, args: string[] = [], opts: SpawnS
     }
     if (result.status) {
         const msg = `Child process ${result.pid} exited with non-zero status ${result.status}: ${result.cmdString}\n${result.stderr}`;
-        // TODO #34
-        // logger.error(msg);
+        logger.error(msg);
         result.error = new Error(msg);
         throw ExecPromiseError.fromSpawnReturns(result);
     }
     if (result.signal) {
         const msg = `Child process ${result.pid} received signal ${result.signal}: ${result.cmdString}\n${result.stderr}`;
-        // TODO #34
-        // logger.error(msg);
+        logger.error(msg);
         result.error = new Error(msg);
         throw ExecPromiseError.fromSpawnReturns(result);
     }

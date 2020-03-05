@@ -165,20 +165,19 @@ describe("child_promise", () => {
             assert(result.stderr === "See log\n");
         });
 
-        // TODO #42
-        // it("should log command", async () => {
-        //     const script = "process.exit(0);";
-        //     let output: string = "";
-        //     const log = { write: d => output += d };
-        //     const opts = {
-        //         cwd: appRoot.path,
-        //         log,
-        //         logCommand: true,
-        //     };
-        //     const result = await spawnPromise("node", ["-e", script], opts);
-        //     assert(output === `Spawned: ${result.cmdString} (PID ${result.pid})\n` +
-        //         `Child process close with code 0 and signal null: ${result.cmdString}\n`);
-        // });
+        it("should log command", async () => {
+            const script = "process.exit(0);";
+            let output: string = "";
+            const log = { write: d => output += d };
+            const opts = {
+                cwd: appRoot.path,
+                log,
+                logCommand: true,
+            };
+            const result = await spawnPromise("node", ["-e", script], opts);
+            assert(output === `Spawned: ${result.cmdString} (PID ${result.pid})\n` +
+                `Child process close with code 0 and signal null: ${result.cmdString}\n`);
+        });
 
     });
 

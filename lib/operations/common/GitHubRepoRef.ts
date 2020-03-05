@@ -24,8 +24,7 @@ import {
 } from "../../action/ActionResult";
 import { Configurable } from "../../project/git/Configurable";
 import { createRepo } from "../../util/gitHub";
-// TODO #28
-// import { logger } from "../../util/logger";
+import { logger } from "../../util/logger";
 import { AbstractRemoteRepoRef } from "./AbstractRemoteRepoRef";
 import { GitShaRegExp } from "./params/validationPatterns";
 import {
@@ -144,8 +143,7 @@ export class GitHubRepoRef extends AbstractRemoteRepoRef {
                     success: true,
                 };
             } catch (e) {
-                // TODO #28
-                // logger.error(`Error attempting to add PR comment. ${url}  ${e}`);
+                logger.error(`Error attempting to add PR comment. ${url}  ${e}`);
                 throw e;
             }
         } else {
@@ -163,8 +161,7 @@ export class GitHubRepoRef extends AbstractRemoteRepoRef {
                     };
                 })
                 .catch(err => {
-                    // TODO #28
-                    // logger.error(`Error attempting to raise PR. ${url}  ${err}`);
+                    logger.error(`Error attempting to raise PR. ${url}  ${err}`);
                     return Promise.reject(err);
                 });
         }
