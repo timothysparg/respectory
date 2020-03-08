@@ -56,7 +56,7 @@ export class BitBucketServerRepoRef extends AbstractRemoteRepoRef {
         };
 
         logger.debug("Making request to BitBucket '%s' to create repo, data=%j", url, data);
-        return configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create(url).exchange(url, {
+        return DefaultHttpClientFactory.create(url).exchange(url, {
             method: HttpMethod.Post,
             body: data,
             headers: {
@@ -83,7 +83,7 @@ export class BitBucketServerRepoRef extends AbstractRemoteRepoRef {
         const url = `${this.scheme}${this.apiBase}/${this.apiPathComponent}`;
         logger.debug(`Making request to '${url}' to delete repo`);
 
-        return configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create(url).exchange(url, {
+        return DefaultHttpClientFactory.create(url).exchange(url, {
             method: HttpMethod.Delete,
             headers: {
                 ...usernameColonPassword(creds),
@@ -134,7 +134,7 @@ export class BitBucketServerRepoRef extends AbstractRemoteRepoRef {
             }),
         };
 
-        return configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create(url).exchange(url, {
+        return DefaultHttpClientFactory.create(url).exchange(url, {
             method: HttpMethod.Post,
             body: data,
             headers: {
@@ -163,8 +163,7 @@ export class BitBucketServerRepoRef extends AbstractRemoteRepoRef {
         const queryParams = `sourceRepoId=${repoId}&targetRepoId=${repoId}&sourceRefId=${head}&targetRefId=${base}`;
 
         const urlWithQueryParams = `${url}?${queryParams}`;
-        const apiResponse = await configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory)
-            .create(url).exchange(urlWithQueryParams, {
+        const apiResponse = await DefaultHttpClientFactory.create(url).exchange(urlWithQueryParams, {
             method: HttpMethod.Get,
             headers: {
                 ...usernameColonPassword(creds),
@@ -175,7 +174,7 @@ export class BitBucketServerRepoRef extends AbstractRemoteRepoRef {
 
     private async getRepoId(creds: ProjectOperationCredentials): Promise<number> {
         const url = `${this.scheme}${this.apiBase}/${this.apiPathComponent}`;
-        const apiResponse =  await configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create(url).exchange(url, {
+        const apiResponse =  DefaultHttpClientFactory.create(url).exchange(url, {
             method: HttpMethod.Get,
             headers: {
                 ...usernameColonPassword(creds),
