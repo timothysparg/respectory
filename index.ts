@@ -14,6 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import { ConfigurationOptions } from "./lib/configuration";
+import { DefaultHttpClientFactory } from "./lib/spi/http/httpClient";
+
 export * from "./lib/tree/ast/astUtils";
 export {
     isTokenCredentials,
@@ -68,3 +71,11 @@ export {
 export {
     CloneOptions,
 } from "./lib/spi/clone/DirectoryManager";
+
+export const Configuration: ConfigurationOptions = {
+    http: {
+        client: {
+            factory: DefaultHttpClientFactory,
+        },
+    },
+};
